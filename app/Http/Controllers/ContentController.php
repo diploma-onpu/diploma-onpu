@@ -49,14 +49,14 @@ class ContentController extends Controller
             'speed' => 'required|string|min:1|max:7'
         ]);
 
-        $userSpeed = \json_decode($request->speed, true);
+        $userSpeed = (int)\json_decode($request->speed, true);
 
-        if (!\json_decode($request->isRecommended, true) || $userSpeed >= 20) {
-            $url = 'content/fast.zip';
-        } elseif($userSpeed > 10 && $userSpeed < 20) {
-            $url = 'content/middle.zip';
+        if (!\json_decode($request->isRecommended, true) || $userSpeed >= 80) {
+            $url = 'content/fast.zip' . $userSpeed;
+        } elseif($userSpeed > 50 && $userSpeed < 80) {
+            $url = 'content/middle.zip' . $userSpeed;
         } else {
-            $url = 'content/slow.zip';
+            $url = 'content/slow.zip' . $userSpeed;
         }
 
         return response()->json([

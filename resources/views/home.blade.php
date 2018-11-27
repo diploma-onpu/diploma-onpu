@@ -50,7 +50,7 @@
                     </table>
                 </div>
                 <div class="modal-footer div-footer">
-                    <button type="button" class="btn btn-primary" id="content-ajax">Check speed</button>
+                    <button type="button" class="btn btn-primary" id="content-ajax">Get params</button>
                 </div>
             </div>
         </div>

@@ -66,7 +66,7 @@ $(document).ready(function () {
 
     function createParamsButton() {
         $('#speed-ajax').remove();
-        $('.div-footer').append('<button type="button" class="btn btn-danger" id="speed-ajax">Get parameters</button>');
+        $('.div-footer').append('<button type="button" class="btn btn-danger" id="speed-ajax">Check speed</button>');
     }
 
     function createDownloadButton() {
