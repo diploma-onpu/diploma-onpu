@@ -38,25 +38,7 @@ class HomeController extends Controller
         ]);
 
         $device = \json_decode($request->device, true);
-
         $device['user_id'] = \Auth::user()->id;
-
-        try {
-            \DB::beginTransaction();
-
-            (new DeviceParams())->saveDeviceData($device);
-
-            \DB::rollBack();
-        } catch (\Exception $e) {
-            // TODO You can log exception message here.
-
-            return response()->json([
-                'status' => 'error',
-                'code' => Response::HTTP_NOT_IMPLEMENTED,
-                'data' => [],
-                'message' => $e->getMessage()
-            ]);
-        }
 
         return response()->json([
             'status' => 'success',
