@@ -29,7 +29,6 @@ class ContentController extends Controller
      * В результате будет строка размером 3145756 байт, где погрешность составит 28 байт поэтому
      * кол-во итераций уменьшим на 1, в результате погрешность составит всего 4 байта, а размер будет 3145732 байт
      * */
-
     public function determineSpeed(Request $request)
     {
         $data = '';
@@ -40,32 +39,5 @@ class ContentController extends Controller
         $t = microtime(true) * 1000;
 
         echo \json_encode([(int)$t, $data]);
-    }
-
-    public function getContent(Request $request)
-    {
-        $request->validate([
-            'isRecommended' => 'required|string|min:4|max:5',
-            'speed' => 'required|string|min:1|max:7'
-        ]);
-
-        $userSpeed = (int)\json_decode($request->speed, true);
-
-        if (!\json_decode($request->isRecommended, true) || $userSpeed >= 80) {
-            $url = 'content/fast.zip' . $userSpeed;
-        } elseif($userSpeed > 50 && $userSpeed < 80) {
-            $url = 'content/middle.zip' . $userSpeed;
-        } else {
-            $url = 'content/slow.zip' . $userSpeed;
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'code' => Response::HTTP_ACCEPTED,
-            'data' => [
-                'url' => $url
-            ],
-            'message' => ''
-        ]);
     }
 }

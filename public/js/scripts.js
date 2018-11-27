@@ -1,7 +1,7 @@
 ;'use strict';
 
 if (!navigator.cookieEnabled) {
-    alert('Для продолжения работы необходимо включить куки.');
+    alert('To continue work, you may enable cookies.');
 }
 
 $(document).ready(function () {
@@ -34,7 +34,6 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#speed-ajax', function () {
-       // $('#download-data-button').remove();
         $.ajax({
             headers: headers,
             url: '/determine-speed',
@@ -56,25 +55,20 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '#get-content', function () {
-        getContent(false);
-    });
-
-    $(document).on('click', '#get-recommended-content', function () {
-        getContent(true);
-    });
-
     function createParamsButton() {
-        $('#speed-ajax').remove();
-        $('.div-footer').append('<button type="button" class="btn btn-danger" id="speed-ajax">Check speed</button>');
+        if (!Object.keys($('#speed-ajax')).length) {
+            $('.div-footer').append('<button type="button" class="btn btn-danger" id="speed-ajax">Check speed</button>');
+        }
     }
 
     function createDownloadButton() {
-        $('#download-data-button').remove();
-        $('.div-footer').append('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" id="download-data-button">\n' +
-            'Download date\n' +
-            '</button>'
-        );
+        deactivateLinks();
+
+        if (!Object.keys($('#download-data-button')).length) {
+            $('.div-footer').append('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" id="download-data-button">\n' +
+                'Download date\n</button>'
+            );
+        }
     }
 
     function getDeviceParams() {
@@ -121,21 +115,56 @@ $(document).ready(function () {
         return 'Undefined';
     }
 
-    function getContent(recommended) {
-        $.ajax({
-            headers: headers,
-            url: '/getContent',
-            method: 'POST',
-            data: {
-                isRecommended: recommended,
-                speed: window.userSpeed,
-            },
-            success: function (response) {
-                $('#div-data-ulr').html('<a href=' + response.data.url + '> download </a>');
-            },
-            error: function (response) {
-                console.log('error', response);
-            }
+    $(document).on('click', '#get-content', function () {
+        deactivateLinks();
+        activateLink($("#div-data-fast>a"), "/content/fast.zip");
+    });
+
+    $(document).on('click', '#get-recommended-content', function () {
+        deactivateLinks();
+        if (window.userSpeed >= 100) {
+            activateLink($("#div-data-fast>a"), "/content/fast.zip");
+        } else if (window.userSpeed > 50 && window.userSpeed < 100) {
+            activateLink($("#div-data-middle>a"), "/content/middle.zip");
+        } else {
+            activateLink($("#div-data-min>a"), "/content/slow.zip");
+        }
+    });
+
+    function deactivateLinks() {
+        let fast = $("#div-data-fast>a");
+        changeHref(fast);
+        changeColor(fast, 'gray', 'default', 'none');
+
+        let middle = $("#div-data-middle>a");
+        changeHref(middle);
+        changeColor(middle, 'gray', 'default', 'none');
+
+        let slow = $("#div-data-min>a");
+        changeHref(slow);
+        changeColor(slow, 'gray', 'default', 'none');
+    }
+
+    function changeHref(element) {
+        element.attr('href', "javascript: void(0);");
+    }
+
+    function changeColor(element, color, pointer, underline) {
+        element.css({
+            'color': color,
+            'cursor': pointer,
+            'text-decoration': underline
         });
+    }
+
+    function deactivateLinks1() {
+        $("#div-data-fast>a").attr('href', "javascript: void(0);");
+        $("#div-data-middle>a").attr('href', "javascript: void(0);");
+        $("#div-data-min>a").attr('href', "javascript: void(0);");
+    }
+
+    function activateLink(element, url) {
+        element.attr('href', url);
+        changeColor(element, '#3385ff', 'pointer', 'underline');
     }
 });
