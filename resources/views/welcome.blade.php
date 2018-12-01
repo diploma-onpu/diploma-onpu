@@ -1,3 +1,6 @@
+<?php
+use App\Traits\TranslateTrait as Trans;
+?>
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
     <head>
@@ -5,15 +8,20 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>ONPU</title>
+        <title><?= Trans::trans('onpu')?></title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+        <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
                 color: #636b6f;
                 font-family: 'Raleway', sans-serif;
                 font-weight: 100;
@@ -69,21 +77,23 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/home') }}"><?= Trans::trans('home')?></a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
+                        <a href="{{ route('login') }}"><?= Trans::trans('login')?></a>
+                        <a href="{{ route('register') }}"><?= Trans::trans('register')?></a>
                     @endauth
                 </div>
             @endif
 
             <div class="content">
                 <div class="content">
-                    <h2>Дипломна робота</h2>
+                    <h2 id="welcome-h2"><?= Trans::trans('diploma')?></h2>
                     <br>
-                    <h3>на тему: "Інформаційна технологія адаптивного керування прийомом-передачею контенту"</h3>
+                    <h3 id="welcome-h3"><?= Trans::trans('on_the_theme')?></h3>
                 </div>
             </div>
         </div>
+        <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/scripts.js') }}"></script>
     </body>
 </html>

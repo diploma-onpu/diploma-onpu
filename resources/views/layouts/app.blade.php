@@ -1,3 +1,6 @@
+<?php
+use App\Traits\TranslateTrait as Trans;
+?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
@@ -39,7 +42,7 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -59,7 +62,7 @@
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                            Logout
+                                            <?= Trans::trans('logout')?>
                                         </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -69,6 +72,14 @@
                                 </ul>
                             </li>
                         @endguest
+
+                        <li class="nav-item">
+                            <div class="navbar-text">
+                                <span id="lang-ua"><a href="setlocale?language=ua">ua</a></span>
+                                <i>|</i>
+                                <span id="lang-en"><a href="setlocale?language=en">en</a></span>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

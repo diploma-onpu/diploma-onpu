@@ -2,23 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DeviceParams;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
+/**
+ * Class HomeController
+ * @package App\Http\Controllers
+ */
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * @return \Illuminate\Http\Response
      */
@@ -46,5 +39,21 @@ class HomeController extends Controller
             'data' => $device,
             'message' => ''
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function setSystemLanguage(Request $request)
+    {
+        $language = $request['language'];
+
+        if ($language && in_array($language, ['ua', 'en'])) {
+            setcookie("systemLanguage", $language, time()+86400);
+            Session::put('locale', $language);
+        }
+
+        return redirect()->back();
     }
 }

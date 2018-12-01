@@ -6,6 +6,7 @@ if (!navigator.cookieEnabled) {
 
 $(document).ready(function () {
     var headers = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+    var params = {};
 
     $('#content-ajax').on('click', function () {
         $.ajax({
@@ -15,8 +16,9 @@ $(document).ready(function () {
             data: {
                 device: JSON.stringify(getDeviceParams()),
             },
-            success: function (response) {
+            success: function (response, params) {
                 let paramsArray = response['data'];
+                window.userParamsArray = paramsArray;
 
                 $('#os').html(paramsArray['platform']);
                 $('#browser').html(paramsArray['browser_name']);
@@ -56,17 +58,18 @@ $(document).ready(function () {
     });
 
     function createParamsButton() {
+        let value = window.lang == 'ua' ? 'Перевiрити швидкiсть' : 'Check speed';
         if (!Object.keys($('#speed-ajax')).length) {
-            $('.div-footer').append('<button type="button" class="btn btn-danger" id="speed-ajax">Check speed</button>');
+            $('.div-footer').append('<button type="button" class="btn btn-danger" id="speed-ajax">' + value + '</button>');
         }
     }
 
     function createDownloadButton() {
         deactivateLinks();
-
+        let value = window.lang == 'ua' ? 'Завантажити' : 'Download date';
         if (!Object.keys($('#download-data-button')).length) {
-            $('.div-footer').append('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" id="download-data-button">\n' +
-                'Download date\n</button>'
+            $('.div-footer').append('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" id="download-data-button">' +
+                 value + '</button>'
             );
         }
     }
@@ -92,25 +95,11 @@ $(document).ready(function () {
     function getNameBrowser() {
         let ua = navigator.userAgent;
 
-        if (ua.search(/Chrome/) > 0) {
-            return 'Google Chrome';
-        }
-
-        if (ua.search(/Firefox/) > 0) {
-            return 'Firefox';
-        }
-
-        if (ua.search(/Opera/) > 0) {
-            return 'Opera';
-        }
-
-        if (ua.search(/Safari/) > 0) {
-            return 'Safari';
-        }
-
-        if (ua.search(/MSIE/) > 0) {
-            return 'Internet Explorer';
-        }
+        if (ua.search(/Chrome/) > 0) return 'Google Chrome';
+        if (ua.search(/Firefox/) > 0) return 'Firefox';
+        if (ua.search(/Opera/) > 0) return 'Opera';
+        if (ua.search(/Safari/) > 0) return 'Safari';
+        if (ua.search(/MSIE/) > 0) return 'Internet Explorer';
 
         return 'Undefined';
     }
@@ -118,6 +107,8 @@ $(document).ready(function () {
     $(document).on('click', '#get-content', function () {
         deactivateLinks();
         activateLink($("#div-data-fast>a"), "/content/fast.zip");
+
+        sendParamsData(params);
     });
 
     $(document).on('click', '#get-recommended-content', function () {
@@ -129,6 +120,8 @@ $(document).ready(function () {
         } else {
             activateLink($("#div-data-min>a"), "/content/slow.zip");
         }
+
+        sendParamsData(params);
     });
 
     function deactivateLinks() {
@@ -167,4 +160,52 @@ $(document).ready(function () {
         element.attr('href', url);
         changeColor(element, '#3385ff', 'pointer', 'underline');
     }
+
+    function sendParamsData() {
+        window.userParamsArray['speed'] = window.userSpeed;
+        $.ajax({
+            headers: headers,
+            url: '/save_params',
+            method: 'POST',
+            data: {
+                params: window.userParamsArray
+            },
+            success: function (response) {
+
+            },
+            error: function (response) {
+                console.log('error', response);
+            }
+        });
+    }
+
+    let cookies = document.cookie.split(';');
+    cookies.map(function (el) {
+        if (el.includes('systemLanguage')) {
+            let lang = el.split('=')[1];
+            if (lang == 'ua') {
+                window.lang = 'ua';
+                $('#lang-ua').addClass('lang-checked');
+                $('#lang-en').removeClass('lang-checked')
+            } else {
+                window.lang = 'en';
+                $('#lang-en').addClass('lang-checked');
+                $('#lang-ua').removeClass('lang-checked')
+            }
+        }
+    });
+
+    var diploma = 'q';
+    var theme = 'w';
+
+    if (window.lang == 'ua') {
+        var diploma = 'Дипломна робота';
+        var theme = 'на тему: "Інформаційна технологія адаптивного керування прийомом-передачею контенту"';
+    } else {
+        var diploma = 'Diploma';
+        var theme = 'on the theme: "Information technology of adaptive control of reception and transmission of content"';
+    }
+
+    $('#welcome-h2').text(diploma);
+    $('#welcome-h3').html(theme);
 });

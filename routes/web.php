@@ -19,5 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/params', 'HomeController@params')->middleware('auth');
-Route::post('/determine-speed', 'ContentController@determineSpeed')->middleware('auth');
-Route::post('/getContent', 'ContentController@getContent')->middleware('auth');
+Route::get('/setlocale', 'HomeController@setSystemLanguage');
+
+Route::post('/determine-speed', 'ContentController@determineSpeed');
+Route::post('/getContent', 'ContentController@getContent');
+
+Route::post('/save_params', 'DeviceParamsController@saveParams');
