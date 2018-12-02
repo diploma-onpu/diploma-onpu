@@ -25,3 +25,5 @@ Route::post('/determine-speed', 'ContentController@determineSpeed');
 Route::post('/getContent', 'ContentController@getContent');
 
 Route::post('/save_params', 'DeviceParamsController@saveParams');
+
+Route::get('/statistic', 'StatisticController@index');

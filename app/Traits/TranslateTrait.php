@@ -188,9 +188,13 @@ trait TranslateTrait
                 'en' => 'link',
                 'ua' => 'посилання',
             ],
-            '' => [
-                'en' => '',
-                'ua' => '',
+            'send_password_reset_link' => [
+                'en' => 'Send Password Reset Link',
+                'ua' => 'Вислати посилання для встановлення паролю',
+            ],
+            'statistics' => [
+                'en' => 'Statistic',
+                'ua' => 'Статистика',
             ],
         ];
     }
